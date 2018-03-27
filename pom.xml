@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gmail.buckartz</groupId>
+    <artifactId>coffee-shop</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <properties.location>-Dproperties.location=main</properties.location>
+                <project.profile>-Dproject.profile=dev</project.profile>
+                <properties.test.location>-Dproperties.location=test</properties.test.location>
+                <project.test.profile>-Dproject.profile=test</project.test.profile>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <properties.location>-Dproperties.location=main</properties.location>
+                <project.profile>-Dproject.profile=dev</project.profile>
+                <properties.test.location>-Dproperties.location=test</properties.test.location>
+                <project.test.profile>-Dproject.profile=test</project.test.profile>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.encoding>UTF-8</project.encoding>
+
+        <jsf.version>2.2.16</jsf.version>
+        <servlet-api.version>2.2</servlet-api.version>
+        <jstl.version>1.2</jstl.version>
+
+        <hibernate.version>5.2.15.Final</hibernate.version>
+
+        <postgresql.driver.version>42.2.2</postgresql.driver.version>
+        <h2.driver.version>1.4.196</h2.driver.version>
+        <junit.version>4.12</junit.version>
+        <lombok.version>1.16.20</lombok.version>
+
+        <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
+        <properties.maven.plugin.version>1.0.0</properties.maven.plugin.version>
+        <plugin.liquibase.version>3.5.0</plugin.liquibase.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>${jsf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>${jsf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.driver.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.driver.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.encoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <argLine>${properties.location} ${project.profile}</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.21.0</version>
+                <configuration>
+                    <argLine>-Dproperties.location=test -Dproject.profile=test</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${plugin.liquibase.version}</version>
+                <executions>
+                    <execution>
+                        <id>main db</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <propertyFile>${basedir}/src/main/resources/db/config/liquibase.properties</propertyFile>
+                        </configuration>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test db</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <propertyFile>${basedir}/src/test/resources/db/config/liquibase-test.properties</propertyFile>
+                        </configuration>
+                        <goals>
+                            <goal>dropAll</goal>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <changeLogFile>${basedir}/src/main/resources/db/changelog/master.xml</changeLogFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
