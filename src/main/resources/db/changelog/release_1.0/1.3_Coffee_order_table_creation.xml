@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1" author="buckartz@gmail.com">
+        <createTable tableName="coffee_order">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="coffee_id" type="BIGINT">
+                <constraints foreignKeyName="coffee_id" referencedTableName="coffee" referencedColumnNames="id"
+                             nullable="false"/>
+            </column>
+            <column name="delivery_id" type="BIGINT">
+                <constraints foreignKeyName="delivery_id" referencedTableName="delivery" referencedColumnNames="id"/>
+            </column>
+            <column name="weight" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="coffee_order"/>
+        </rollback>
+    </changeSet>
+    <changeSet id="2" author="buckartz@gmail.com">
+        <createSequence sequenceName="coffee_order_seq"
+                        startValue="1"
+                        incrementBy="1"/>
+        <rollback>
+            <dropSequence sequenceName="coffee_order_seq"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
