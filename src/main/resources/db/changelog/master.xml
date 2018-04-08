@@ -4,4 +4,5 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd" >
 
     <include file="src/main/resources/db/changelog/release_1.0/1.1_Coffee_schema_creation.xml"/>
+    <include file="src/main/resources/db/changelog/release_1.0/1.2_Delivery_table_creation.xml"/>
 </databaseChangeLog>
