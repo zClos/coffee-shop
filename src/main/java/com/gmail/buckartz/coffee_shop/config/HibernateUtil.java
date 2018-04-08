@@ -1,6 +1,8 @@
 package com.gmail.buckartz.coffee_shop.config;
 
 import com.gmail.buckartz.coffee_shop.domain.Coffee;
+import com.gmail.buckartz.coffee_shop.domain.CoffeeOrder;
+import com.gmail.buckartz.coffee_shop.domain.Delivery;
 import com.gmail.buckartz.coffee_shop.util.Environment;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -40,11 +42,14 @@ public final class HibernateUtil {
                 registryBuilder.applySettings(settings);
                 registry = registryBuilder.build();
                 MetadataSources sources = new MetadataSources(registry)
-                        .addAnnotatedClass(Coffee.class);
+                        .addAnnotatedClass(Coffee.class)
+                        .addAnnotatedClass(CoffeeOrder.class)
+                        .addAnnotatedClass(Delivery.class);
 
                 sessionFactory = sources.buildMetadata().buildSessionFactory();
             } catch (Exception e) {
                 if (registry != null) {
+                    e.printStackTrace();
                     StandardServiceRegistryBuilder.destroy(registry);
                 }
             }
